@@ -2,7 +2,7 @@ export type SocialLink = {
   id: string;
   label: string;
   href: string;
-  icon: "analytics" | "production";
+  icon: "analytics" | "production" | "workforce";
 };
 
 export const profile = {
@@ -26,5 +26,11 @@ export const socialLinks: SocialLink[] = [
     label: "생산DATA 분석",
     href: "https://jinyong1015-companysangsan.vercel.app/",
     icon: "production",
+  },
+  {
+    id: "workforce",
+    label: "VINA인원현황",
+    href: "https://hyundaecorpvinapeople.vercel.app/",
+    icon: "workforce",
   },
 ];
