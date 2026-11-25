@@ -4,6 +4,9 @@ import { AUTH_USERNAME } from "@/lib/auth-public";
 export const AUTH_COOKIE = "hyundaecorp-auth";
 export { AUTH_USERNAME };
 
+/** 로그인 유지 시간 (3시간) */
+export const AUTH_MAX_AGE_SECONDS = 60 * 60 * 3;
+
 const AUTH_PASSWORD = process.env.SITE_PASSWORD ?? "0535863500";
 const AUTH_SECRET =
   process.env.AUTH_SECRET ?? "hyundaecorp-link-auth-secret-v1";
@@ -34,6 +37,12 @@ export function verifyAuthToken(token: string | undefined) {
   if (!token) return false;
   const [issuedAt, signature] = token.split(".");
   if (!issuedAt || !signature) return false;
+
+  const issuedAtMs = Number(issuedAt);
+  if (!Number.isFinite(issuedAtMs)) return false;
+
+  const ageMs = Date.now() - issuedAtMs;
+  if (ageMs < 0 || ageMs > AUTH_MAX_AGE_SECONDS * 1000) return false;
 
   const expected = createHmac("sha256", AUTH_SECRET)
     .update(`${AUTH_USERNAME}:${issuedAt}`)
